@@ -103,6 +103,25 @@ body.addEventListener("click" , e =>{
 });
 
 </script>
-<script src="https://sheetdb.io/s/t/xo9sw0oh91c43.js"></script>
+<?php
+$spreadsheet_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQSpnJicrP7PV8Rw5AJ61Ze9jFbBOzrTrqXwVhGFKOkBKp2rHWNNzcIGM7JMM5QSbS2rnHnV_4aInyC/pub?gid=0&single=true&output=csv';
+$csv = file_get_contents($spreadsheet_url);
+$rows = explode("\n",$csv);
+$data = array();
+$names = array();
+for($i=0; $i<count($rows); $i++) {
+if($i==0){
+$names = str_getcsv($rows[$i]);
+}else{
+$data[] = str_getcsv($rows[$i]);
+}
+}
+$dg = new C_DataGrid($data, "id", "Google_Spreadsheet");
+for($i=0; $i<count($names); $i++) { $dg->set_col_title($i, $names[$i]);
+}
+$dg->enable_search(true, array(1,2,3,5));
+$dg->set_theme('aristo');
+$dg->display();
+?>
 </body>
 </html>
